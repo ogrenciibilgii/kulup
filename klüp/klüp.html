@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Kulüp Kayıt Formu</title>
+  <link rel="stylesheet" href="klüp.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Kulüp Kayıt Formu</h1>
+    <p>Lütfen bilgilerinizi doldurun</p>
+
+    <form id="kulupForm">
+      <div class="form-group">
+        <label for="ogrNo">Öğrenci No</label>
+        <input type="text" id="ogrNo" name="ogrNo" required>
+      </div>
+
+      <div class="form-group">
+        <label for="adSoyad">Ad Soyad</label>
+        <input type="text" id="adSoyad" name="adSoyad" required>
+      </div>
+
+      <div class="form-group">
+        <label>Kulüp Seçimi</label>
+        <label><input type="radio" name="kulup" value="Afet Hazırlık Kulübü"> <span class="club-text">Afet Hazırlık Kulübü</span></label>
+        <label><input type="radio" name="kulup" value="Çevre Koruma Kulübü"> <span class="club-text">Çevre Koruma Kulübü</span></label>
+        <label><input type="radio" name="kulup" value="Değerler Kulübü"> <span class="club-text">Değerler Kulübü</span></label>
+        <label><input type="radio" name="kulup" value="Bilim,Fen Ve Teknoloji Kulübü"> <span class="club-text">Bilim,Fen Ve Teknoloji Kulübü</span></label>
+        <label><input type="radio" name="kulup" value="Engellilerle Dayanışma Kulübü"> <span class="club-text">Engellilerle Dayanışma Kulübü</span></label>
+        <label><input type="radio" name="kulup" value="Gezi,Tanıtma ve Turizm Kulübü"> <span class="club-text">Gezi,Tanıtma ve Turizm Kulübü</span></label>
+        <label><input type="radio" name="kulup" value="Kızılay ve Kan Bağışı Kulübü"> <span class="club-text">Kızılay ve Kan Bağışı Kulübü</span></label>
+        <label><input type="radio" name="kulup" value="Kütüphanecilik Kulübü"> <span class="club-text">Kütüphanecilik Kulübü</span></label>
+        <label><input type="radio" name="kulup" value="Sosyal Medya Kulübü"> <span class="club-text">Sosyal Medya Kulübü</span></label>
+        <label><input type="radio" name="kulup" value="Satranç Kulübü"> <span class="club-text">Satranç Kulübü</span></label>
+        <label><input type="radio" name="kulup" value="Şiir ve Tefekkür Kulübü"> <span class="club-text">Şiir ve Tefekkür Kulübü</span></label>
+        <label><input type="radio" name="kulup" value="Sosyal Yardımlaşma ve Dayanışma, Çocuk Esirgeme Kulübü"> <span class="club-text">Sosyal Yardımlaşma ve Dayanışma, Çocuk Esirgeme Kulübü</span></label>
+        <label><input type="radio" name="kulup" value="Spor Kulübü"> <span class="club-text">Spor Kulübü</span></label>
+        <label><input type="radio" name="kulup" value="Robotik ve Kodlama Kulübü(Çizelge Dışı)"> <span class="club-text">Robotik ve Kodlama Kulübü(Çizelge Dışı)</span></label>
+        <label><input type="radio" name="kulup" value="İzcilik Kulübü"> <span class="club-text">İzcilik Kulübü</span></label>
+      </div>
+
+      <button type="submit">Onayla</button>
+    </form>
+
+    <div id="sonuc"></div>
+  </div>
+
+  <script>
+    const FORM_ACTION_URL = "https://script.google.com/macros/s/AKfycbzibFnL1Itt-Vv02Uz87WMrPtzCLBSb-OYGe6zRm183YZntIzihwbwkn9qe34lm9Shu/exec"; // kendi URL'ni yaz
+
+    const form = document.getElementById("kulupForm");
+    const sonuc = document.getElementById("sonuc");
+    const kontenjan = 2; // Her kulüp için maksimum kontenjan
+
+    // Sayfa yüklendiğinde kontenjan bilgilerini al ve göster
+    window.addEventListener("DOMContentLoaded", () => {
+      fetch(FORM_ACTION_URL)
+        .then(res => res.json())
+        .then(data => {
+          console.log("Kulüp doluluk durumu:", data);
+          updateKontenjanDisplay(data);
+        })
+        .catch(err => {
+          console.error("Kulüp verileri alınamadı:", err);
+        });
+    });
+
+    // Kontenjan bilgilerini güncelle
+    function updateKontenjanDisplay(data) {
+      const radios = document.querySelectorAll('input[name="kulup"]');
+      
+      radios.forEach(radio => {
+        const clubName = radio.value;
+        const kayitliSayisi = data[clubName] || 0;
+        const kalan = kontenjan - kayitliSayisi;
+        const clubTextSpan = radio.parentElement.querySelector('.club-text');
+        
+        if (kayitliSayisi >= kontenjan) {
+          // Kulüp dolu
+          radio.disabled = true;
+          radio.parentElement.classList.add("disabled-label");
+          clubTextSpan.innerHTML = clubName + ' <span class="dolu">(DOLU)</span>';
+        } else {
+          // Kontenjan var
+          clubTextSpan.innerHTML = clubName + ' <span class="kontenjan">(' + kalan + ')</span>';
+        }
+      });
+    }
+
+    // Form gönderimi
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const ogrNo = formData.get("ogrNo");
+      const adSoyad = formData.get("adSoyad");
+      const kulup = formData.get("kulup");
+
+      if (!kulup) {
+        sonuc.innerHTML = "<p class='fail'>❗Lütfen bir kulüp seçiniz.</p>";
+        return;
+      }
+
+      sonuc.textContent = "Gönderiliyor...";
+
+      const data = new FormData();
+      data.append("ogrNo", ogrNo);
+      data.append("adSoyad", adSoyad);
+      data.append("kulup", kulup);
+
+      fetch(FORM_ACTION_URL, { method: "POST", body: data })
+        .then(res => res.json())
+        .then(result => {
+          if (result.result === "success") {
+            sonuc.innerHTML = "<span class='ok'>✔ Kayıt başarılı. Katıldığınız kulüp: " + kulup + "</span>";
+            form.reset();
+            // Kontenjan bilgilerini yeniden yükle
+            setTimeout(() => {
+              fetch(FORM_ACTION_URL)
+                .then(res => res.json())
+                .then(data => updateKontenjanDisplay(data))
+                .catch(err => console.error("Kontenjan güncellenirken hata:", err));
+            }, 1000);
+          } else if (result.result === "fail" && result.message === "Kontenjan dolu") {
+            sonuc.innerHTML = "<span class='fail'>❗ Seçtiğiniz kulübün kontenjanı dolmuş.</span>";
+          } else if (result.result === "fail" && result.message === "Bu öğrenci zaten kayıt olmuş.") {
+            sonuc.innerHTML = "<span class='fail'>❗ Bu öğrenci numarası ile zaten kayıt yapılmış.</span>";
+          } else {
+            sonuc.innerHTML = "<span class='fail'>Bir hata oluştu: " + (result.message || "Bilinmeyen hata") + "</span>";
+          }
+        })
+        .catch(err => {
+          sonuc.innerHTML = "<span class='fail'>Sunucu hatası: " + err.message + "</span>";
+        });
+    });
+  </script>
+</body>
+</html>
