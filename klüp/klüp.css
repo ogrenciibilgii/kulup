@@ -1,0 +1,122 @@
+.form-group label input[type="radio"] {
+  margin-right: 8px;
+}
+
+/* Genel */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #551e52, #000000,#551e52);
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Kart */
+.container {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  animation: fadeIn 0.6s ease;
+}
+
+/* Başlık */
+h1 {
+  margin: 0 0 10px;
+  text-align: center;
+  color: #333;
+}
+p {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+/* Form alanları */
+.form-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.form-group label {
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+}
+input {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 15px;
+  transition: border 0.3s;
+}
+input:focus {
+  border-color: #4facfe;
+  outline: none;
+}
+
+/* Buton */
+button {
+  width: 100%;
+  padding: 12px;
+  background: #551e52;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+button:hover {
+  background: #8f199c;
+}
+
+/* Sonuç mesajı */
+#sonuc {
+  margin-top: 15px;
+  text-align: center;
+  font-weight: 600;
+}
+.ok { color: green; }
+.fail { color: red; }
+
+/* Animasyon */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 20px 20px;
+    max-width: 95vw;
+    margin: 10px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+
+  input {
+    font-size: 1.1rem;
+    padding: 12px;
+  }
+
+  button {
+    font-size: 1.2rem;
+    padding: 14px;
+  }
+}
+
+.disabled-label {
+      color: #aaa !important;
+      cursor: not-allowed;
+}
